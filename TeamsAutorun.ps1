@@ -4,22 +4,22 @@ $VerbosePreference = 'SilentlyContinue'
 $VerbosePreference = 'Continue'
 
 # Run registry property name
-$TeamsPropertyName = 'com.squirrel.Teams.Teams'
-#Set-Variable -Name TeamsPropertyName -Value 'com.squirrel.Teams.Teams' -constant
+Set-Variable -Name TeamsPropertyName -Value 'com.squirrel.Teams.Teams' -Option Constant
+Set-Variable -name RegistryRunKeyPath -Value 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Option Constant
 
 # Teams Config Data file Path
 $TeamsConfig = "$env:APPDATA\Microsoft\Teams\desktop-config.json"
 
+# a flag that indicates whether to save config file
 $SaveConfigFile = $false
 
-
-$TeamsAutoRun = (Get-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Run -ea SilentlyContinue)."$TeamsPropertyName"
+$TeamsAutoRun = (Get-ItemProperty -Path $RegistryRunKeyPath -ErrorAction SilentlyContinue)."$TeamsPropertyName"
 
 # If Teams autorun entry exists, remove it
 if ($TeamsAutoRun)
 {
     Write-Verbose "property $TeamsPropertyName exists in HKCU Run registry"
-	Remove-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Run -Name $TeamsPropertyName
+	Remove-ItemProperty -Path $RegistryRunKeyPath -Name $TeamsPropertyName
 } else {
     Write-Verbose "property $TeamsPropertyName does not exist in HKCU Run registry"
 
