@@ -1,11 +1,11 @@
-﻿[Cmdlettbinding(SupportsShouldprocess=$true)]
+﻿[Cmdletbinding(SupportsShouldProcess=$true)]
 
 $VerbosePreference = 'SilentlyContinue'
 $VerbosePreference = 'Continue'
 
 # Run registry property name
-Set-Variable -Name TeamsPropertyName -Value 'com.squirrel.Teams.Teams' -Option Constant
-Set-Variable -name RegistryRunKeyPath -Value 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Option Constant
+$TeamsPropertyName = 'com.squirrel.Teams.Teams' 
+$RegistryRunKeyPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' 
 
 # Teams Config Data file Path
 $TeamsConfig = "$env:APPDATA\Microsoft\Teams\desktop-config.json"
