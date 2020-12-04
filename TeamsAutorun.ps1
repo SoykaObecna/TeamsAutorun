@@ -94,13 +94,16 @@ if (Test-Path -Path $TeamsConfig) {
     #kill teams before saving the file
     if (Get-Process -Name 'teams' -ErrorAction SilentlyContinue) {
         Write-Verbose "killing teams process"
-
-        Stop-Process -Name 'teams' -ErrorAction SilentlyContinue
+        if ($PSCmdlet.ShouldProcess("Teams process", "Kill") {
+            Stop-Process -Name 'teams' -ErrorAction SilentlyContinue
+        }
     }
 
     if ($SaveConfigFile) {
         Write-Verbose "saving $TeamsConfig file"
-        $TeamsConfigData | ConvertTo-Json -Depth 100 | Out-File -Encoding UTF8 -FilePath $TeamsConfig -Force
+        if ($PSCmdlet.ShouldProcess("file $TeamsConfig", "Save") {
+            $TeamsConfigData | ConvertTo-Json -Depth 100 | Out-File -Encoding UTF8 -FilePath $TeamsConfig -Force
+        }
     }
     
 
