@@ -1,4 +1,5 @@
 ﻿[Cmdletbinding(SupportsShouldProcess=$true)]
+param()
 
 $VerbosePreference = 'SilentlyContinue'
 $VerbosePreference = 'Continue'
