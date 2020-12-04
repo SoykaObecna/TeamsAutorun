@@ -1,8 +1,11 @@
-﻿$VerbosePreference = 'SilentlyContinue'
+﻿[Cmdlettbinding(SupportsShouldprocess=$true)]
+
+$VerbosePreference = 'SilentlyContinue'
 $VerbosePreference = 'Continue'
 
 # Run registry property name
 $TeamsPropertyName = 'com.squirrel.Teams.Teams'
+#Set-Variable -Name TeamsPropertyName -Value 'com.squirrel.Teams.Teams' -constant
 
 # Teams Config Data file Path
 $TeamsConfig = "$env:APPDATA\Microsoft\Teams\desktop-config.json"
