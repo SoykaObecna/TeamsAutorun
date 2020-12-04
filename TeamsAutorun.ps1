@@ -10,27 +10,29 @@ $RegistryRunKeyPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 # Teams Config Data file Path
 $TeamsConfig = "$env:APPDATA\Microsoft\Teams\desktop-config.json"
 
-# a flag that indicates whether to save config file
+# a flag that indicates whether there are some chnges to be saved to $TeamsConfig json config file
 $SaveConfigFile = $false
 
 $TeamsAutoRun = (Get-ItemProperty -Path $RegistryRunKeyPath -ErrorAction SilentlyContinue)."$TeamsPropertyName"
 
 # If Teams autorun entry exists, remove it
-if ($TeamsAutoRun)
-{
+if ($TeamsAutoRun) {
     Write-Verbose "property $TeamsPropertyName exists in HKCU Run registry"
-	Remove-ItemProperty -Path $RegistryRunKeyPath -Name $TeamsPropertyName
-} else {
-    Write-Verbose "property $TeamsPropertyName does not exist in HKCU Run registry"
+    if ($PSCmdlet.ShouldProcess("registry Value $RegistryRunKeyPath\$TeamsPropertyName", "Remove") {
+            Remove-ItemProperty -Path $RegistryRunKeyPath -Name $TeamsPropertyName
+        }
+    }
+    else {
+        Write-Verbose "property $TeamsPropertyName does not exist in HKCU Run registry"
+
+    }
 
 }
-
-
 
 if (Test-Path -Path $TeamsConfig) {
     Write-Verbose "file $TeamsConfig exists"
 
-    $TeamsConfigData = Get-Content $TeamsConfig -Raw | ConvertFrom-Json
+    $TeamsConfigData = Get-Content -Path $TeamsConfig -Raw | ConvertFrom-Json
 
     switch ($TeamsConfigData.appPreferenceSettings)
     {
@@ -92,6 +94,7 @@ if (Test-Path -Path $TeamsConfig) {
     #kill teams before saving the file
     if (Get-Process -Name 'teams' -ErrorAction SilentlyContinue) {
         Write-Verbose "killing teams process"
+
         Stop-Process -Name 'teams' -ErrorAction SilentlyContinue
     }
 
