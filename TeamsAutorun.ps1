@@ -18,16 +18,16 @@ $TeamsAutoRun = (Get-ItemProperty -Path $RegistryRunKeyPath -ErrorAction Silentl
 # If Teams autorun entry exists, remove it
 if ($TeamsAutoRun) {
     Write-Verbose "property $TeamsPropertyName exists in HKCU Run registry"
-    if ($PSCmdlet.ShouldProcess("registry Value $RegistryRunKeyPath\$TeamsPropertyName", "Remove") {
+    if ($PSCmdlet.ShouldProcess("registry Value $RegistryRunKeyPath\$TeamsPropertyName", "Remove")) {
             Remove-ItemProperty -Path $RegistryRunKeyPath -Name $TeamsPropertyName
         }
-    }
-    else {
+}
+else {
         Write-Verbose "property $TeamsPropertyName does not exist in HKCU Run registry"
 
-    }
-
 }
+
+
 
 if (Test-Path -Path $TeamsConfig) {
     Write-Verbose "file $TeamsConfig exists"
@@ -90,18 +90,19 @@ if (Test-Path -Path $TeamsConfig) {
     } #switch
 
 
-    #save config file
+    
     #kill teams before saving the file
     if (Get-Process -Name 'teams' -ErrorAction SilentlyContinue) {
         Write-Verbose "killing teams process"
-        if ($PSCmdlet.ShouldProcess("Teams process", "Kill") {
+        if ($PSCmdlet.ShouldProcess("Teams process", "Kill")) {
             Stop-Process -Name 'teams' -ErrorAction SilentlyContinue
         }
     }
 
+    #save config file
     if ($SaveConfigFile) {
         Write-Verbose "saving $TeamsConfig file"
-        if ($PSCmdlet.ShouldProcess("file $TeamsConfig", "Save") {
+        if ($PSCmdlet.ShouldProcess("file $TeamsConfig", "Save")) {
             $TeamsConfigData | ConvertTo-Json -Depth 100 | Out-File -Encoding UTF8 -FilePath $TeamsConfig -Force
         }
     }
@@ -111,5 +112,5 @@ if (Test-Path -Path $TeamsConfig) {
 		
 		
 } else {
-    Write-Verbose "file $TeamsConfig does not exist"
+    Write-Verbose "Teams config file $TeamsConfig does not exist"
 }
